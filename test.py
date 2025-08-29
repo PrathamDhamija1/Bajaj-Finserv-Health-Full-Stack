@@ -2,12 +2,10 @@ from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
-# ======= YOUR DETAILS (edit these 4 lines) =======
-FULL_NAME = "john_doe"      # lowercase, words joined with underscore
-DOB_DDMMYYYY = "17091999"   # ddmmyyyy
+FULL_NAME = "john_doe"      
+DOB_DDMMYYYY = "17091999"   
 EMAIL = "john@xyz.com"
 ROLL_NUMBER = "ABCD123"
-# ================================================
 
 
 def is_numeric_str(s: str) -> bool:
@@ -29,7 +27,7 @@ def alternating_caps_reverse(s: str) -> str:
 
 @app.route("/", methods=["GET"])
 def root():
-    # Helpful landing page so you don't see 404s on GET /
+    
     return jsonify(
         {
             "message": "BFHL API is running. Send a POST to /bfhl.",
@@ -40,7 +38,7 @@ def root():
 
 @app.route("/bfhl", methods=["GET"])
 def bfhl_get():
-    # Optional GET so the browser shows something useful
+    
     return jsonify({"status": "ok", "hint": "Send a POST with JSON {\"data\": [...] } to this same endpoint."}), 200
 
 
@@ -53,25 +51,25 @@ def bfhl_post():
 
         input_items = payload["data"]
 
-        # Buckets
+        
         even_numbers = []
         odd_numbers = []
         alphabets = []
         special_characters = []
         total_sum = 0
 
-        # For concat_string: collect only alphabet characters from items that are purely alphabetic
+       
         letters_linear = []
 
         for item in input_items:
-            s = str(item)  # tolerate non-string inputs
+            s = str(item)  
             if is_numeric_str(s):
                 n = int(s)
-                (even_numbers if n % 2 == 0 else odd_numbers).append(s)  # keep numbers as strings
+                (even_numbers if n % 2 == 0 else odd_numbers).append(s)  
                 total_sum += n
             elif is_alpha_str(s):
                 alphabets.append(s.upper())
-                letters_linear.extend(list(s))  # collect raw letters for later alternating-caps
+                letters_linear.extend(list(s))  
             else:
                 special_characters.append(s)
 
@@ -84,9 +82,9 @@ def bfhl_post():
             "roll_number": ROLL_NUMBER,
             "odd_numbers": odd_numbers,
             "even_numbers": even_numbers,
-            "alphabets": alphabets,               # already uppercased
+            "alphabets": alphabets,               
             "special_characters": special_characters,
-            "sum": str(total_sum),                # sum returned as string
+            "sum": str(total_sum),                
             "concat_string": concat_string,
         }
         return jsonify(response), 200
@@ -96,5 +94,6 @@ def bfhl_post():
 
 
 if __name__ == "__main__":
-    # Local dev server
+    
     app.run(host="127.0.0.1", port=5000, debug=True)
+
